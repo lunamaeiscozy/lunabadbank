@@ -1,49 +1,47 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from './UserProvider';
+import { useContext, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
-function Deposit({ user }) {
-  const { users, setUsers } = useContext(UserContext);
-  const [show, setShow] = useState(true);
-  const [deposit, setDeposit] = useState('');
+const Deposit = () => {
+  const { user, setUser } = useContext(UserContext);
+  const [amount, setAmount] = useState('');
 
-  function addDeposit() {
-    const updatedUsers = users.map((u) => {
-      if (u.id === user.id) {
-        const updatedBalance = u.balance + Number(deposit);
-        return { ...u, balance: updatedBalance };
-      }
-      return u;
-    });
-    setUsers(updatedUsers);
-    setShow(false);
-  }
+  const handleDeposit = (e) => {
+    e.preventDefault();
+    const depositAmount = parseFloat(amount);
+    if (!isNaN(depositAmount) && depositAmount > 0) {
+      const updatedUser = { ...user, balance: user.balance + depositAmount };
+      setUser(updatedUser);
+      setAmount('');
+    } else {
+      console.log('Invalid deposit amount');
+    }
+  };
 
   return (
-    <Card bg="secondary" text="white">
-      <Card.Header>Make A Deposit</Card.Header>
+    <Card>
       <Card.Body>
-        {show ? (
-          <>
-            <Card.Text>How Much Would You Like To Deposit?</Card.Text>
+        <Card.Title>Make a Deposit</Card.Title>
+        <Form onSubmit={handleDeposit}>
+          <Form.Group controlId="formAmount">
+            <Form.Label>Amount</Form.Label>
             <Form.Control
-              type="input"
-              placeholder="Enter Amount"
-              value={deposit}
-              onChange={(e) => setDeposit(e.target.value)}
+              type="number"
+              placeholder="Enter deposit amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
             />
-            <Button variant="light" onClick={addDeposit}>
-              Submit Deposit
-            </Button>
-          </>
-        ) : (
-          <Card.Title>Your Balance Has Been Updated</Card.Title>
-        )}
+          </Form.Group>
+
+          <Button variant="primary" type="submit">
+            Deposit
+          </Button>
+        </Form>
       </Card.Body>
     </Card>
   );
-}
+};
 
-export default DepositCard;
+export default Deposit;

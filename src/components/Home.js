@@ -1,18 +1,21 @@
+import { UserContext } from '../context/UserContext';
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
 
-function Home() {
+const Home = () => {
   return (
-    <Card text="black">
-      <Card.Header>My Bad Bank Home Page</Card.Header>
-      <Card.Body>
-        <Card.Title>Welcome to My Bad Bank!</Card.Title>
-        <Card.Text>
-          Use the navigation bar to explore the application, but please refrain from entering any personal information.
-        </Card.Text>
-        <Card.Img src="pig.png" className="img-fluid" alt="Piggy bank with coins" />
-      </Card.Body>
-    </Card>
+    <div>
+      <Card style={{ width: '18rem' }}>
+        <Card.Img variant="top" src="pig.png" />
+        <Card.Body>
+          <Card.Title>Welcome to My Bad Bank</Card.Title>
+          <Card.Text>
+            This is a sample banking application built with React and react-bootstrap.
+            Feel free to explore the different features and functionalities. This application is for demo purposes only. Please refrain from entering your personal information. 
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
   );
 }
 

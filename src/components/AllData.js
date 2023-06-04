@@ -1,39 +1,32 @@
-import React, { useContext } from 'react';
-import { UserContext } from './UserProvider';
-import { Card, Table } from 'react-bootstrap';
+import { UserContext } from '../context/UserContext';
+import { useContext } from 'react';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
-function AllData() {
-  const { users } = useContext(UserContext);
+const AllData = () => {
+  const { user } = useContext(UserContext);
 
   return (
-    <Card bg="secondary" text="white">
-      <Card.Header>All User Data</Card.Header>
+    <Card>
       <Card.Body>
-        <Table striped bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Password</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.password}</td>
-                <td>{user.balance}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Card.Title>User Information</Card.Title>
+        <ListGroup variant="flush">
+          <ListGroup.Item>
+            <strong>Name:</strong> {user.name}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <strong>Email:</strong> {user.email}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <strong>Balance:</strong> {user.balance}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <strong>Password:</strong> {user.password}
+          </ListGroup.Item>
+        </ListGroup>
       </Card.Body>
     </Card>
   );
-}
+};
 
 export default AllData;

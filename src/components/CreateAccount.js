@@ -1,90 +1,77 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from './UserProvider';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+import { UserContext } from '../context/UserContext';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
-function CreateAccount() {
-  const [show, setShow] = useState(true);
-  const [status, setStatus] = useState('');
+const CreateAccount = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [balance, setBalance] = useState(0);
   const [password, setPassword] = useState('');
-  const { users, addUser } = useContext(UserContext);
 
-  function validate(field, label) {
-    if (!field) {
-      setStatus('Error: ' + label);
-      setTimeout(() => setStatus(''), 3000);
-      return false;
-    }
-    return true;
-  }
-
-  function handleCreate() {
-    console.log(name, email, password);
-    if (!validate(name, 'name')) return;
-    if (!validate(email, 'email')) return;
-    if (!validate(password, 'password')) return;
-    addUser({ name, email, password, balance: 100 });
-    setShow(false);
-  }
-
-  function clearForm() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setName('');
     setEmail('');
+    setBalance(0);
     setPassword('');
-    setShow(true);
-  }
+  };
 
   return (
-    <Card bg="secondary" text="white">
-      <Card.Header>Create Account</Card.Header>
-      <Card.Body>
-        {show ? (
-          <>
-            <Form.Group controlId="name">
+    <div>
+      <h2>Create New Account</h2>
+      <Card>
+        <Card.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formName">
               <Form.Label>Name</Form.Label>
               <Form.Control
-                type="input"
-                placeholder="Enter Name"
+                type="text"
+                placeholder="Enter name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="email">
+
+            <Form.Group controlId="formEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
-                type="input"
-                placeholder="Enter Email"
+                type="email"
+                placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="password">
+
+            <Form.Group controlId="formBalance">
+              <Form.Label>Balance</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter initial balance"
+                value={balance}
+                onChange={(e) => setBalance(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Enter Password"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            <Button variant="light" onClick={handleCreate}>
+
+            <Button variant="primary" type="submit">
               Create Account
             </Button>
-          </>
-        ) : (
-          <>
-            <Card.Title>Success</Card.Title>
-            <Button variant="light" onClick={clearForm}>
-              Add another account
-            </Button>
-          </>
-        )}
-      </Card.Body>
-    </Card>
+          </Form>
+        </Card.Body>
+      </Card>
+    </div>
   );
-}
+};
 
 export default CreateAccount;

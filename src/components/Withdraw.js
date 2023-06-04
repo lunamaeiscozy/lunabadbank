@@ -1,67 +1,47 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from './UserProvider';
-import { Card, Alert, Form, Button } from 'react-bootstrap';
+import { useContext, useState } from 'react';
+import { UserContext } from '../context/UserContext';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
-function Withdraw() {
-  const { users, setUsers } = useContext(UserContext);
-  const [show, setShow] = useState(true);
-  const [withdrawalAmount, setWithdrawalAmount] = useState('');
-  const [status, setStatus] = useState('');
+const Withdraw = () => {
+  const { user, setUser } = useContext(UserContext);
+  const [amount, setAmount] = useState('');
 
-  function validateWithdrawal() {
-    const currentUser = users.find(u => u.id === user.id);
-    if (currentUser.balance >= withdrawalAmount) {
-      handleWithdrawal(currentUser);
+  const handleWithdraw = (e) => {
+    e.preventDefault();
+    const withdrawalAmount = parseFloat(amount);
+    if (!isNaN(withdrawalAmount) && withdrawalAmount > 0 && withdrawalAmount <= user.balance) {
+      const updatedUser = { ...user, balance: user.balance - withdrawalAmount };
+      setUser(updatedUser);
+      setAmount('');
     } else {
-      setStatus('Please enter a valid amount for withdrawal.');
+      console.log('Invalid withdrawal amount');
     }
-  }
-
-  function handleWithdrawal(currentUser) {
-    const updatedBalance = currentUser.balance - Number(withdrawalAmount);
-    const updatedUsers = users.map((u) =>
-      u.id === currentUser.id ? { ...u, balance: updatedBalance } : u
-    );
-    setUsers(updatedUsers);
-    setShow(false);
-  }
+  };
 
   return (
-    <Card bg="secondary" text="white">
-      <Card.Header>Make A Withdrawal</Card.Header>
+    <Card>
       <Card.Body>
-        {show ? (
-          <>
+        <Card.Title>Make a Withdrawal</Card.Title>
+        <Form onSubmit={handleWithdraw}>
+          <Form.Group controlId="formAmount">
+            <Form.Label>Amount</Form.Label>
             <Form.Control
-              type="input"
-              className="form-control"
-              id="withdraw"
-              placeholder="Enter Amount"
-              value={withdrawalAmount}
-              onChange={(e) => setWithdrawalAmount(e.currentTarget.value)}
+              type="number"
+              placeholder="Enter withdrawal amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
             />
-            <br />
-            <Button
-              type="submit"
-              className="btn btn-light"
-              onClick={validateWithdrawal}
-            >
-              Submit Withdraw
-            </Button>
-            {status && (
-              <Alert variant="warning">
-                <strong>Warning!</strong> {status}
-              </Alert>
-            )}
-          </>
-        ) : (
-          <>
-            <h5>Your Balance Has Been Updated</h5>
-          </>
-        )}
+          </Form.Group>
+
+          <Button variant="primary" type="submit">
+            Withdraw
+          </Button>
+        </Form>
       </Card.Body>
     </Card>
   );
-}
+};
 
 export default Withdraw;
